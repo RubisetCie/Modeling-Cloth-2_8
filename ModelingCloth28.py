@@ -1461,7 +1461,7 @@ def z_grid(co_z, tzmin, tzmax, subs, co_x, txmin, txmax, co_y, tymin, tymax):
     return np.hstack(c_peat), np.hstack(t_peat)
 
 """Combined with numexpr the first check min and max is faster
-    Combined without numexpr is slower. It's better to separate min and max"""
+   Combined without numexpr is slower. It's better to separate min and max"""
 def v_per_tri(co, tri_min, tri_max, idxer, tridexer, c_peat=None, t_peat=None):
     """Checks each point against the bounding box of each triangle"""
 
@@ -1550,7 +1550,6 @@ def inside_triangles(tri_vecs, v2, co, tri_co_2, cidx, tidx, nor, ori, in_margin
     in_margin[idxer] = check
 
 def object_collide(cloth, object):
-
     # for doing static cling
     #   cloth.col_idx = np.array([], dtype=np.int32)
     #   cloth.re_col = np.empty((0,3), dtype=np.float32)
@@ -1926,6 +1925,122 @@ def init_cloth(self, context):
 
     for i in cull:
         del data[i]
+
+# default cloth materials (original change by "cut7man" [https://github.com/cut7man/Modeling-Cloth-2_8])
+class ClothMaterials(bpy.types.Operator):
+    bl_idname = "object.default_materials"
+    bl_label = "Default material"
+    bl_description = "Choose cloth default material"
+    bl_property = "cloth_materials"
+
+    cloth_materials: bpy.props.EnumProperty(
+        name="Cloth materials",
+        items=(
+            ("material_custom", "Custom", "", "MATERIAL_CUSTOM", 0),
+            ("material_cotton", "Cotton", "", "MATERIAL_COTTON", 1),
+            ("material_denim", "Denim", "", "MATERIAL_DENIM", 2),
+            ("material_leather", "Leather", "", "MATERIAL_LEATHER", 3),
+            ("material_rubber", "Rubber", "", "MATERIAL_RUBBER", 4),
+            ("material_silk", "Silk", "", "MATERIAL_SILK", 5),
+            ("material_foam", "Foam", "", "MATERIAL_FOAM", 6)
+        ),
+    )
+
+    def execute(self, context):
+        default_cloth_material(None, self.cloth_materials)
+        return {"FINISHED"}
+
+    def invoke(self, context, event):
+        context.window_manager.invoke_search_popup(self)
+        return {"RUNNING_MODAL"}
+
+def default_cloth_material(ob, value):
+    if ob is None:
+        if bpy.context.active_object.modeling_cloth:
+            ob = bpy.context.active_object
+        else:
+            ob = extra_data["last_object"]
+
+    if (value == "material_cotton"):
+        ob.modeling_cloth_iterations = 25
+        ob.modeling_cloth_noise = 0.001
+        ob.modeling_cloth_noise_decay = 0.75
+        ob.modeling_cloth_spring_force = 0.4
+        ob.modeling_cloth_gravity = -0.001
+        ob.modeling_cloth_velocity = 0.25
+        ob.modeling_cloth_sew = 1
+        ob.modeling_cloth_push_springs = 0.1
+        ob.modeling_cloth_bend_stiff = 0
+        if ob.modeling_cloth_object_collision:
+            ob.modeling_cloth_outer_margin = 0.005
+            ob.modeling_cloth_inner_margin = 0.01
+    elif (value == "material_denim"):
+        ob.modeling_cloth_iterations = 25
+        ob.modeling_cloth_noise = 0.2
+        ob.modeling_cloth_noise_decay = 0.75
+        ob.modeling_cloth_spring_force = 0.8
+        ob.modeling_cloth_gravity = -0.25
+        ob.modeling_cloth_velocity = 0.5
+        ob.modeling_cloth_sew = 1
+        ob.modeling_cloth_push_springs = 0.3
+        ob.modeling_cloth_bend_stiff = 0
+        if ob.modeling_cloth_object_collision:
+            ob.modeling_cloth_outer_margin = 0.01
+            ob.modeling_cloth_inner_margin = 0.02
+    elif (value == "material_leather"):
+        ob.modeling_cloth_iterations = 25
+        ob.modeling_cloth_noise = 0.1
+        ob.modeling_cloth_noise_decay = 0.75
+        ob.modeling_cloth_spring_force = 1.6
+        ob.modeling_cloth_gravity = -0.5
+        ob.modeling_cloth_velocity = 0.5
+        ob.modeling_cloth_sew = 1
+        ob.modeling_cloth_push_springs = 0.3
+        ob.modeling_cloth_bend_stiff = 0
+        if ob.modeling_cloth_object_collision:
+            ob.modeling_cloth_outer_margin = 0.01
+            ob.modeling_cloth_inner_margin = 0.02
+    elif (value == "material_rubber"):
+        ob.modeling_cloth_iterations = 40
+        ob.modeling_cloth_noise = 0.1
+        ob.modeling_cloth_noise_decay = 0.75
+        ob.modeling_cloth_spring_force = 0.5
+        ob.modeling_cloth_gravity = -0.01
+        ob.modeling_cloth_velocity = 0.15
+        ob.modeling_cloth_sew = 1
+        ob.modeling_cloth_inflate = 0.0001
+        ob.modeling_cloth_push_springs = 0.3
+        ob.modeling_cloth_bend_stiff = 0
+        if ob.modeling_cloth_object_collision:
+            ob.modeling_cloth_outer_margin = 0.02
+            ob.modeling_cloth_inner_margin = 0.04
+    elif (value == "material_silk"):
+        ob.modeling_cloth_iterations = 40
+        ob.modeling_cloth_noise = 0.0001
+        ob.modeling_cloth_noise_decay = 0.15
+        ob.modeling_cloth_spring_force = 0.15
+        ob.modeling_cloth_gravity = -0.001
+        ob.modeling_cloth_velocity = 0.15
+        ob.modeling_cloth_sew = 1
+        ob.modeling_cloth_push_springs = 0.3
+        ob.modeling_cloth_bend_stiff = 0
+        ob.modeling_cloth_inflate = 0.0001
+        if ob.modeling_cloth_object_collision:
+            ob.modeling_cloth_outer_margin = 0.015
+            ob.modeling_cloth_inner_margin = 0.03
+    elif (value == "material_foam"):
+        ob.modeling_cloth_iterations = 25
+        ob.modeling_cloth_noise = 0.2
+        ob.modeling_cloth_noise_decay = 0.75
+        ob.modeling_cloth_spring_force = 0.8
+        ob.modeling_cloth_gravity = -0.25
+        ob.modeling_cloth_velocity = 0.5
+        ob.modeling_cloth_sew = 1
+        ob.modeling_cloth_push_springs = 0.3
+        ob.modeling_cloth_bend_stiff = 0.4
+        if ob.modeling_cloth_object_collision:
+            ob.modeling_cloth_outer_margin = 0.01
+            ob.modeling_cloth_inner_margin = 0.02
 
 def main(context, event):
     # get the context arguments
@@ -2511,7 +2626,7 @@ def create_properties():
         bpy.types.Scene.modeling_cloth_data_set = {}
         bpy.types.Scene.modeling_cloth_data_set_extra = {}
 
-def remove_properties():            
+def remove_properties():
     del(bpy.types.Object.modeling_cloth)
     del(bpy.types.Object.modeling_cloth_floor)
     del(bpy.types.Object.modeling_cloth_pause)
@@ -2624,8 +2739,12 @@ class PANEL_PT_modelingCloth(bpy.types.Panel):
                     col.operator("object.modeling_cloth_reset", text="Reset")
                     col.alert = extra_data["drag_alert"]
                     col.operator("view3d.modeling_cloth_drag", text="Grab")
-                    col = layout.column(align=True)
 
+                    # default materials
+                    col = layout.column(align=True)
+                    col.operator("object.default_materials", text="Default materials", icon="PRESET")
+
+                    col = layout.column(align=True)
                     col.prop(ob, "modeling_cloth_iterations", text="Iterations")#, icon="OUTLINER_OB_LATTICE")
                     col.prop(ob, "modeling_cloth_spring_force", text="Stiffness")#, icon="OUTLINER_OB_LATTICE")
                     col.prop(ob, "modeling_cloth_push_springs", text="Push Springs")#, icon="OUTLINER_OB_LATTICE")
@@ -2705,6 +2824,7 @@ def collision_series(paperback=True, kindle=True):
 def register():
     create_properties()
     bpy.utils.register_class(PANEL_PT_modelingCloth)
+    bpy.utils.register_class(ClothMaterials)
     bpy.utils.register_class(ModelingClothPin)
     bpy.utils.register_class(ModelingClothDrag)
     bpy.utils.register_class(DeletePins)
@@ -2725,6 +2845,7 @@ def register():
 def unregister():
     remove_properties()
     bpy.utils.unregister_class(PANEL_PT_modelingCloth)
+    bpy.utils.unregister_class(ClothMaterials)
     bpy.utils.unregister_class(ModelingClothPin)
     bpy.utils.unregister_class(ModelingClothDrag)
     bpy.utils.unregister_class(DeletePins)
