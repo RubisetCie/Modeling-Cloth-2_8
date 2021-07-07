@@ -2544,7 +2544,7 @@ class PANEL_PT_modelingCloth(bpy.types.Panel):
     bl_idname = "PANEL_PT_modelingCloth"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    bl_category = "Extended Tools"
+    bl_category = "Create"
     
     def draw(self, context):
         status = False
