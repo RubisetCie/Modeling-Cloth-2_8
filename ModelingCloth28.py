@@ -2673,12 +2673,6 @@ class PANEL_PT_modelingCloth(bpy.types.Panel):
                         col.operator("object.modeling_cloth_shrink", text="Shrink Source")
                         col = layout.column(align=True)
 
-                col = layout.column(align=True)
-                col.label(text="Support Addons")
-                col.operator("object.modeling_cloth_collision_series_kindle", text="Kindle")
-                col.operator("object.modeling_cloth_donate", text="Donate")
-                col.operator("object.modeling_cloth_collision_series", text="Buy Books")
-
 class CollisionSeries(bpy.types.Operator):
     """Support my addons by checking out my awesome Sci-Fi books"""
     bl_idname = "object.modeling_cloth_collision_series"
