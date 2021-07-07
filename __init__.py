@@ -10,7 +10,7 @@ bl_info = {
     "blender": (2, 80, 0),
     "location": "View3D > Create > Modeling Cloth",
     "description": "Maintains the surface area of an object so it behaves like cloth",
-    "wiki_url": "https://github.com/RubisetCie/Modeling-Cloth-2_8",
+    "wiki_url": "https://github.com/the3dadvantage/Modeling-Cloth-2_8",
     "category": "3D View"}
 
 if "bpy" in locals():

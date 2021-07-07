@@ -1055,12 +1055,6 @@ def run_handler(cloth):
             cloth.ob.data.shape_keys.key_blocks["modeling cloth key"].mute = True
             cloth.ob.data.shape_keys.key_blocks["modeling cloth key"].mute = False
 
-def bold_new_collisions():
-    pass
-    
-    def weighted_av_barycentric_spheres():
-        pass
-
 def edges_edges(co, eidx_pairs, cloth):
     """Find the two points that describe the shortest vector
     between two edge segments that is orthagonal to both"""
@@ -1693,18 +1687,14 @@ def self_collide(cloth):
 class Collider(object):
     pass
 
-class SelfCollider(object):
-    pass
-
 def create_collider():
     col = Collider()
     col.ob = bpy.context.active_object
 
     dg = bpy.context.evaluated_depsgraph_get()
     col.dg = dg
+
     # get proxy
-    #proxy = col.ob.to_mesh(bpy.context.evaluated_depsgraph_get(), True, calc_undeformed=False)
-    #proxy = col.ob.to_mesh()
     proxy = col.ob.evaluated_get(dg).data
 
     col.co = get_proxy_co(col.ob, None, proxy)
