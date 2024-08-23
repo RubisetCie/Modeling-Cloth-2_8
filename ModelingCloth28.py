@@ -2657,12 +2657,6 @@ class PANEL_PT_modelingCloth(bpy.types.Panel):
 
         ob = bpy.context.active_object
 
-        col = layout.column(align=True)
-        col.label(text="Support Addons")
-        col.operator("object.modeling_cloth_donate", text="Donate")
-        col.operator("object.modeling_cloth_collision_series", text="Buy Books")
-        col.operator("object.modeling_cloth_collision_series_kindle", text="Kindle")
-
         # tools
         col = layout.column(align=True)
         col.label(text="Tools")        
@@ -2782,34 +2776,6 @@ class PANEL_PT_modelingCloth(bpy.types.Panel):
                         col.operator("object.modeling_cloth_shrink", text="Shrink Source")
                         col = layout.column(align=True)
 
-class CollisionSeries(bpy.types.Operator):
-    """Support my addons by checking out my awesome Sci-Fi books"""
-    bl_idname = "object.modeling_cloth_collision_series"
-    bl_label = "Modeling Cloth Collision Series"
-
-    def execute(self, context):
-        collision_series()
-        return {"FINISHED"}
-
-class CollisionSeriesKindle(bpy.types.Operator):
-    """Support my addons by checking out my awesome Sci-Fi books"""
-    bl_idname = "object.modeling_cloth_collision_series_kindle"
-    bl_label = "Modeling Cloth Collision Series Kindle"
-
-    def execute(self, context):
-        collision_series(False)
-        return {"FINISHED"}
-
-class Donate(bpy.types.Operator):
-    """Support my addons by donating"""
-    bl_idname = "object.modeling_cloth_donate"
-    bl_label = "Modeling Cloth Donate"
-
-    def execute(self, context):
-        collision_series(False, False)
-        self.report({"INFO"}, "Paypal, The3dAdvantage@gmail.com")
-        return {"FINISHED"}
-
 def collision_series(paperback=True, kindle=True):
     import webbrowser
     import imp
@@ -2838,9 +2804,6 @@ def register():
     bpy.utils.register_class(RemoveVirtualSprings)
     bpy.utils.register_class(ModelingClothSew)
     bpy.utils.register_class(ApplyClothToMesh)
-    bpy.utils.register_class(CollisionSeries)
-    bpy.utils.register_class(CollisionSeriesKindle)
-    bpy.utils.register_class(Donate)
 
 def unregister():
     remove_properties()
@@ -2859,6 +2822,3 @@ def unregister():
     bpy.utils.unregister_class(RemoveVirtualSprings)
     bpy.utils.unregister_class(ModelingClothSew)
     bpy.utils.unregister_class(ApplyClothToMesh)
-    bpy.utils.unregister_class(CollisionSeries)
-    bpy.utils.unregister_class(CollisionSeriesKindle)
-    bpy.utils.unregister_class(Donate)
